@@ -1,0 +1,15 @@
+@(content: String)
+
+@import org.activiti.engine.form
+
+@main("Sign Up") {
+	@views.html.header("header ")
+} {
+    
+	@Html(content)
+    
+} {
+	@views.html.sidebar("Sidebar ")
+} {
+	@views.html.footer("footer ")
+} 

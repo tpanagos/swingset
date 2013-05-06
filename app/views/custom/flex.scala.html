@@ -1,0 +1,16 @@
+@(subForm: String, routeHandler: play.api.mvc.Call, processVariables: scala.collection.mutable.Map[String,java.lang.Object], userForm: play.data.DynamicForm)
+
+@import org.activiti.engine.form
+@for((k,v) <- processVariables){
+	@k
+}
+	@subForm match {
+		case "selectProvider" => {
+			@views.html.custom.selectProvider(subForm, routeHandler, processVariables, userForm)
+		}
+		case "enterProviderCreds" => {
+			@views.html.custom.enterProviderCreds(subForm, routeHandler, processVariables, userForm)
+		}
+		case _ => {
+		}
+	}

@@ -1,0 +1,25 @@
+@(content: String)
+@import org.activiti.engine.form
+@import org.activiti.explorer.ui.process
+@import org.activiti.explorer
+@import helper._
+<script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script language='javascript' type="text/javascript">
+	        $('#wfForm').submit(function() {
+						$.ajax({type:'POST', url: '/doneHandle', data:$('#wfForm').serialize(), 
+							success: 
+								function(response) {  
+									$('#wfForm').empty();
+		        					$('#wfForm').append(response);
+		    					}
+		    			});
+		    			return false;
+				});
+</script>
+        
+@helper.form(action = routes.Application.doneHandle, 'id -> "wfForm") {
+		@Html(content)
+	   <div class="modal-footer">
+    			<button id="close" type="close" class="btn btn-primary">Close</button>
+  		</div>
+}

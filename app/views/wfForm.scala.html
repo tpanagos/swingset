@@ -1,0 +1,33 @@
+@(content: String, routeHandler: play.api.mvc.Call, formProperties: java.util.List[org.activiti.engine.form.FormProperty], userForm: play.data.DynamicForm)
+@import org.activiti.engine.form
+@import org.activiti.explorer.ui.process
+@import org.activiti.explorer
+@import helper._
+@import views.FieldAdder
+<script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script>
+		     $('#wfNextBtn').html("Next");
+		     $('#wfForm').blur(function() {
+						$.ajax({type:'POST', url: '/doneHandle', data:$('#wfForm').serialize(), 
+							success: 
+alert("blur");
+		    			});
+		    			return false;
+				});
+	        $('#wfForm').submit(function() {
+						$.ajax({type:'POST', url: '@routeHandler.url', data:$('#wfForm').serialize(), 
+							success: 
+								function(response) {  
+		        					$('#wfForm').replaceWith(response);
+		    					}
+		    			});
+		    			return false;
+				});
+</script>
+@helper.form(action = routeHandler, 'id -> "wfForm") {
+		@for(i <- formProperties) {
+	   	@views.FieldAdder.smartInput(i, userForm)
+	   }
+    <button id="wfnexthidden" type="submit" class="btn btn-primary" style="display:none">Next</button>
+}
+

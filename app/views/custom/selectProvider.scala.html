@@ -1,0 +1,28 @@
+@(subForm: String, routeHandler: play.api.mvc.Call, processVariables: scala.collection.mutable.Map[String,java.lang.Object], userForm: play.data.DynamicForm)
+@import org.activiti.engine.form
+@import org.activiti.explorer.ui.process
+@import org.activiti.explorer
+@import helper._
+@import views.FieldAdder
+<script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script>
+		     $('#wfNextBtn').html("Next");
+	        $('#wfForm').submit(function() {
+						$.ajax({type:'POST', url: '@routeHandler.url', data:$('#wfForm').serialize(), 
+							success: 
+								function(response) {  
+		        					$('#wfForm').replaceWith(response);
+		    					}
+		    			});
+		    			return false;
+				});
+</script>
+
+@helper.form(action = routeHandler, 'id -> "wfForm") {
+
+	   	@views.FieldAdder.smartInput("provider", "Select Provider", processVariables("cp_str_providers"), "enum", true, true, userForm)
+
+    <button id="wfnexthidden" type="submit" class="btn btn-primary" style="display:none">Next</button>
+
+}
+

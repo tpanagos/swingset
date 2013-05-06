@@ -1,0 +1,22 @@
+@(content: String)
+
+@import org.activiti.engine.form
+
+@main("Sign Up") {
+	@views.html.header("header ")
+} {
+    
+	@Html(content)
+	
+	@helper.form(action = routes.Application.redoHandle) {
+
+        <div class="actions">
+            <input type="submit" value="Redo" class="btn primary">
+        </div>
+    
+}    
+} {
+	@views.html.sidebar("Sidebar ")
+} {
+	@views.html.footer("footer ")
+} 

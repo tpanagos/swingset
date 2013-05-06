@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20">
+  <process id="addStorageRequest" name="Add Storage" isExecutable="true">
+    <startEvent id="start"></startEvent>
+    <endEvent id="theEnd"></endEvent>
+    <serviceTask id="getProviderTypes" name="Get List of Available Providers" activiti:class="controllers.cp_ListStorageProviders"></serviceTask>
+    <serviceTask id="getProviderCreds" name="Get Necessary Provider Credentials" activiti:class="controllers.cp_getStorageCredentials"></serviceTask>
+    <serviceTask id="createStorageSite" name="Create New Storage Connection" activiti:class="controllers.cp_createStorageSite"></serviceTask>
+    <userTask id="selectProvider" name="Enter Selection of Provider" activiti:formKey="selectProvider"></userTask>
+    <userTask id="enterCredentials" name="Enter Credentials for Provider" activiti:formKey="enterProviderCreds"></userTask>
+    <sequenceFlow id="flow1" sourceRef="start" targetRef="getProviderTypes"></sequenceFlow>
+    <sequenceFlow id="flow2" sourceRef="getProviderTypes" targetRef="selectProvider"></sequenceFlow>
+    <sequenceFlow id="flow3" sourceRef="selectProvider" targetRef="getProviderCreds"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="getProviderCreds" targetRef="enterCredentials"></sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="enterCredentials" targetRef="createStorageSite"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="createStorageSite" targetRef="theEnd"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_addStorageRequest">
+    <bpmndi:BPMNPlane bpmnElement="addStorageRequest" id="BPMNPlane_addStorageRequest">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="35.0" width="35.0" x="30.0" y="200.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="theEnd" id="BPMNShape_theEnd">
+        <omgdc:Bounds height="35.0" width="35.0" x="395.0" y="200.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="getProviderTypes" id="BPMNShape_getProviderTypes">
+        <omgdc:Bounds height="55.0" width="105.0" x="130.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="getProviderCreds" id="BPMNShape_getProviderCreds">
+        <omgdc:Bounds height="55.0" width="105.0" x="130.0" y="370.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="selectProvider" id="BPMNShape_selectProvider">
+        <omgdc:Bounds height="55.0" width="105.0" x="130.0" y="290.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="enterCredentials" id="BPMNShape_enterCredentials">
+        <omgdc:Bounds height="55.0" width="105.0" x="280.0" y="370.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="createStorageSite" id="BPMNShape_createStorageSite">
+        <omgdc:Bounds height="55.0" width="105.0" x="360.0" y="290.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="65.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="130.0" y="237.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="182.0" y="265.0"></omgdi:waypoint>
+        <omgdi:waypoint x="182.0" y="290.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="182.0" y="345.0"></omgdi:waypoint>
+        <omgdi:waypoint x="182.0" y="370.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="235.0" y="397.0"></omgdi:waypoint>
+        <omgdi:waypoint x="280.0" y="397.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="385.0" y="397.0"></omgdi:waypoint>
+        <omgdi:waypoint x="412.0" y="397.0"></omgdi:waypoint>
+        <omgdi:waypoint x="412.0" y="345.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="412.0" y="290.0"></omgdi:waypoint>
+        <omgdi:waypoint x="412.0" y="235.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,14 @@
+@(content: String, routeHandler: play.api.mvc.Call, formProperties: java.util.List[org.activiti.engine.form.FormProperty], userForm: play.data.DynamicForm)
+
+@import org.activiti.engine.form
+
+@main(content + " Process") {
+	@views.html.header("Welcome to " + content)
+} {
+	@**views.html.wfStartForm("", formProperties, userForm)**@
+	@views.html.wfForm("", routeHandler, formProperties, userForm)
+} {
+	@**views.html.sidebar("Sidebar ")**@
+} {
+	@views.html.footer("footer ")
+} 

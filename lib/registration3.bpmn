@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20">
+  <process id="registrationRequest" name="CloudPointe Registration" isExecutable="true">
+    <documentation>get you registered and ready to use CloudPointe</documentation>
+    <startEvent id="start" activiti:initiator="email" activiti:formKey="wf:submitReviewTask">
+      <documentation>New User ${email} has requested a new account.</documentation>
+    </startEvent>
+    <sequenceFlow id="flow1" sourceRef="start" targetRef="setCredentials"></sequenceFlow>
+    <userTask id="addStorage" name="Add Storage" activiti:assignee="Assignee">
+      <documentation>New User ${email} has been created.</documentation>
+      <extensionElements>
+        <activiti:formProperty id="storage_username" name="Username" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="storage_password" name="Password" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="storage_provider" name="Select Storage Provider" type="enum" required="true">
+          <activiti:value id="google" name="GoogleDocs"></activiti:value>
+          <activiti:value id="dropbox" name="DropBox"></activiti:value>
+        </activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <endEvent id="end"></endEvent>
+    <sequenceFlow id="flow2" sourceRef="exclusivegateway2" targetRef="usertask1"></sequenceFlow>
+    <userTask id="setCredentials" name="Set Credentials" activiti:assignee="Assignee">
+      <extensionElements>
+        <activiti:formProperty id="first" name="First Name" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="last" name="Last Name" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="email" name="Email" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="password" name="Password" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="password1" name="Retype Password" type="string" required="true"></activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow3" sourceRef="setCredentials" targetRef="setPassword"></sequenceFlow>
+    <serviceTask id="register_api" name="Create CloudPointe Registration" activiti:class="controllers.cp_RESTAPI"></serviceTask>
+    <sequenceFlow id="flow4" sourceRef="register_api" targetRef="exclusivegateway1"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow7" sourceRef="exclusivegateway1" targetRef="setCredentials">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${status != "GOOD"}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="setPassword" name="Set Password">
+      <extensionElements>
+        <activiti:formProperty id="password"></activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow8" sourceRef="setPassword" targetRef="register_api"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow11" sourceRef="addStorage" targetRef="servicetask1"></sequenceFlow>
+    <sequenceFlow id="flow12" sourceRef="exclusivegateway2" targetRef="addStorage"></sequenceFlow>
+    <userTask id="usertask1" name="CreateLink"></userTask>
+    <sequenceFlow id="flow13" sourceRef="servicetask3" targetRef="end"></sequenceFlow>
+    <serviceTask id="servicetask1" name="CreateStorageLink"></serviceTask>
+    <sequenceFlow id="flow14" sourceRef="servicetask1" targetRef="exclusivegateway2"></sequenceFlow>
+    <serviceTask id="servicetask2" name="UploadFile"></serviceTask>
+    <sequenceFlow id="flow15" sourceRef="usertask1" targetRef="servicetask2"></sequenceFlow>
+    <serviceTask id="servicetask3" name="Generate Link"></serviceTask>
+    <sequenceFlow id="flow16" sourceRef="servicetask2" targetRef="servicetask3"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_registrationRequest">
+    <bpmndi:BPMNPlane bpmnElement="registrationRequest" id="BPMNPlane_registrationRequest">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="35.0" width="35.0" x="40.0" y="310.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="addStorage" id="BPMNShape_addStorage">
+        <omgdc:Bounds height="55.0" width="105.0" x="554.0" y="30.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="35.0" width="35.0" x="684.0" y="364.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="setCredentials" id="BPMNShape_setCredentials">
+        <omgdc:Bounds height="55.0" width="105.0" x="110.0" y="300.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="register_api" id="BPMNShape_register_api">
+        <omgdc:Bounds height="55.0" width="105.0" x="260.0" y="220.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="420.0" y="227.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="setPassword" id="BPMNShape_setPassword">
+        <omgdc:Bounds height="55.0" width="105.0" x="110.0" y="220.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="687.0" y="125.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="554.0" y="202.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="554.0" y="118.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="554.0" y="283.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask3" id="BPMNShape_servicetask3">
+        <omgdc:Bounds height="55.0" width="105.0" x="554.0" y="354.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="75.0" y="327.0"></omgdi:waypoint>
+        <omgdi:waypoint x="110.0" y="327.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="707.0" y="165.0"></omgdi:waypoint>
+        <omgdi:waypoint x="606.0" y="202.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="162.0" y="300.0"></omgdi:waypoint>
+        <omgdi:waypoint x="162.0" y="275.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="365.0" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="420.0" y="247.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="440.0" y="267.0"></omgdi:waypoint>
+        <omgdi:waypoint x="368.0" y="370.0"></omgdi:waypoint>
+        <omgdi:waypoint x="332.0" y="370.0"></omgdi:waypoint>
+        <omgdi:waypoint x="282.0" y="370.0"></omgdi:waypoint>
+        <omgdi:waypoint x="162.0" y="355.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="215.0" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="260.0" y="247.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="606.0" y="85.0"></omgdi:waypoint>
+        <omgdi:waypoint x="606.0" y="118.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="727.0" y="145.0"></omgdi:waypoint>
+        <omgdi:waypoint x="756.0" y="129.0"></omgdi:waypoint>
+        <omgdi:waypoint x="606.0" y="85.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow13" id="BPMNEdge_flow13">
+        <omgdi:waypoint x="659.0" y="381.0"></omgdi:waypoint>
+        <omgdi:waypoint x="684.0" y="381.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow14" id="BPMNEdge_flow14">
+        <omgdi:waypoint x="659.0" y="145.0"></omgdi:waypoint>
+        <omgdi:waypoint x="687.0" y="145.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow15" id="BPMNEdge_flow15">
+        <omgdi:waypoint x="606.0" y="257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="606.0" y="283.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow16" id="BPMNEdge_flow16">
+        <omgdi:waypoint x="606.0" y="338.0"></omgdi:waypoint>
+        <omgdi:waypoint x="606.0" y="354.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

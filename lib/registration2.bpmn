@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20">
+  <process id="registrationRequest" name="CloudPointe Registration" isExecutable="true">
+    <documentation>get you registered and ready to use CloudPointe</documentation>
+    <startEvent id="start" activiti:initiator="email" activiti:formKey="wf:submitReviewTask">
+      <documentation>New User ${email} has requested a new account.</documentation>
+    </startEvent>
+    <sequenceFlow id="flow1" sourceRef="start" targetRef="setCredentials"></sequenceFlow>
+    <endEvent id="end"></endEvent>
+    <userTask id="setCredentials" name="Set Credentials" activiti:assignee="Assignee">
+      <extensionElements>
+        <activiti:formProperty id="first" name="First Name" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="last" name="Last Name" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="email" name="Email" type="string" required="true"></activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow3" sourceRef="setCredentials" targetRef="setPassword"></sequenceFlow>
+    <serviceTask id="register_api" name="Create CloudPointe Registration" activiti:class="controllers.cp_RegisterUser"></serviceTask>
+    <sequenceFlow id="flow4" sourceRef="register_api" targetRef="exclusivegateway1"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow7" sourceRef="exclusivegateway1" targetRef="setCredentials">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${status != "GOOD"}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="setPassword" name="Set Password">
+      <extensionElements>
+        <activiti:formProperty id="password" name="Password" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="password1" name="Retype Password" type="string" required="true"></activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow8" sourceRef="setPassword" targetRef="register_api"></sequenceFlow>
+    <sequenceFlow id="flow17" sourceRef="exclusivegateway1" targetRef="end">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${status == "GOOD"}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_registrationRequest">
+    <bpmndi:BPMNPlane bpmnElement="registrationRequest" id="BPMNPlane_registrationRequest">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="35.0" width="35.0" x="40.0" y="310.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="35.0" width="35.0" x="514.0" y="230.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="setCredentials" id="BPMNShape_setCredentials">
+        <omgdc:Bounds height="55.0" width="105.0" x="110.0" y="300.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="register_api" id="BPMNShape_register_api">
+        <omgdc:Bounds height="55.0" width="105.0" x="260.0" y="220.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="420.0" y="227.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="setPassword" id="BPMNShape_setPassword">
+        <omgdc:Bounds height="55.0" width="105.0" x="110.0" y="220.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="75.0" y="327.0"></omgdi:waypoint>
+        <omgdi:waypoint x="110.0" y="327.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="162.0" y="300.0"></omgdi:waypoint>
+        <omgdi:waypoint x="162.0" y="275.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="365.0" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="420.0" y="247.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="440.0" y="267.0"></omgdi:waypoint>
+        <omgdi:waypoint x="368.0" y="370.0"></omgdi:waypoint>
+        <omgdi:waypoint x="332.0" y="370.0"></omgdi:waypoint>
+        <omgdi:waypoint x="282.0" y="370.0"></omgdi:waypoint>
+        <omgdi:waypoint x="162.0" y="355.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="215.0" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="260.0" y="247.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow17" id="BPMNEdge_flow17">
+        <omgdi:waypoint x="460.0" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="514.0" y="247.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

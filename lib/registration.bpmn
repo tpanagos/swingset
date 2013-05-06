@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20">
+  <process id="registrationRequest" name="CloudPointe Registration">
+  	<documentation>get you registered and ready to use CloudPointe</documentation>
+  	<startEvent id="start" activiti:formKey="wf:submitReviewTask"
+  		activiti:initiator="email">
+  		<documentation>
+  			New User ${email} has requested a new account.
+  		</documentation>
+  		<extensionElements>
+  			<activiti:formProperty id="email" name="Email"
+  				type="string" required="true"></activiti:formProperty>
+  			<activiti:formProperty id="password" name="Password"
+  				type="string" required="true"></activiti:formProperty>
+  			<activiti:formProperty id="password2"
+  				name="Repeat Password" type="string" required="true"></activiti:formProperty>
+  		</extensionElements>
+  	</startEvent>
+  	<sequenceFlow id="flow1" sourceRef="start"
+  		targetRef="addStorage">
+  	</sequenceFlow>
+  	<userTask id="addStorage" name="Add Storage"
+  		activiti:assignee="Assignee">
+  		<documentation>
+  			New User ${email} has been created.
+  		</documentation>
+  		<extensionElements>
+  			<activiti:formProperty id="storage_username"
+  				name="Username" type="string" required="true"></activiti:formProperty>
+  			<activiti:formProperty id="storage_password"
+  				name="Password" type="string" required="true"></activiti:formProperty>
+  			<activiti:formProperty id="storage_provider"
+  				name="Select Storage Provider" type="enum" required="true">
+  				<activiti:value id="google" name="GoogleDocs"></activiti:value>
+  				<activiti:value id="dropbox" name="DropBox"></activiti:value>
+  			</activiti:formProperty>
+  		</extensionElements>
+  		<potentialOwner>
+  			<resourceAssignmentExpression>
+  				<expression>${email}</expression>
+  			</resourceAssignmentExpression>
+  		</potentialOwner>
+  	</userTask>
+  	<endEvent id="end"></endEvent>
+  	<sequenceFlow id="flow2" sourceRef="addStorage" targetRef="end"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_registrationRequest">
+    <bpmndi:BPMNPlane bpmnElement="registrationRequest" id="BPMNPlane_registrationRequest">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="35.0" width="35.0" x="30.0" y="200.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="addStorage" id="BPMNShape_reviewTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="105.0" y="190.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="35.0" width="35.0" x="270.0" y="200.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="65.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="105.0" y="217.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="210.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="270.0" y="217.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
